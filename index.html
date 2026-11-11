@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>لوحة المعلم · نتائج الاختبار</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="لوحة المعلم">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#102733">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%23102733%22/%3E%3Cpath d=%22M20 34 6 27l14-7 14 7z%22 fill=%22%23b9773a%22/%3E%3Cpath d=%22M20 28 6 21l14-7 14 7z%22 fill=%22%233f8f4a%22/%3E%3Cpath d=%22M20 22 6 15l14-7 14 7z%22 fill=%22%232f7fc1%22/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: a map sheet in a GIS workspace — dark toolbar, graduated neatline, layered basemap ground (graticule + contour lines) */
+:root{
+  --bg:#e9efed; --grid:#d3ddda; --contour:#c9d6c9; --surface:#fbfcfb; --raised:#f1f5f4; --ink:#14232b; --muted:#56676d; --line:#d2dcda;
+  --head:#102733; --on-head:#eaf4f5; --head-muted:#8fb0b8;
+  --accent:#0b7c8c; --accent-soft:#d9eff1;
+  --water:#2f7fc1; --veg:#3f8f4a; --terrain:#b9773a;
+  --green:#2b8a46; --green-soft:#dff1e4; --bad:#c0392b; --bad-soft:#fbe4e1; --warn:#a86a12; --warn-soft:#f8ecd3;
+  --gold:#b08a2e; --silver:#7d8793; --bronze:#a0623a;
+  --display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b161c; --grid:#14252d; --contour:#16302c; --surface:#111f26; --raised:#17282f; --ink:#e3eef0; --muted:#93a9ae; --line:#24383f;
+  --head:#07131a; --on-head:#e3f1f3; --head-muted:#6f939b;
+  --accent:#3cc0cf; --accent-soft:#123a40;
+  --water:#5aa5e3; --veg:#62b56d; --terrain:#d79a5c;
+  --green:#55c07a; --green-soft:#173723; --bad:#f0705f; --bad-soft:#3d1b17; --warn:#e3ac4f; --warn-soft:#3a2b13;
+  --gold:#d8b04f; --silver:#aab3bd; --bronze:#cf8a5c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b161c; --grid:#14252d; --contour:#16302c; --surface:#111f26; --raised:#17282f; --ink:#e3eef0; --muted:#93a9ae; --line:#24383f;
+  --head:#07131a; --on-head:#e3f1f3; --head-muted:#6f939b;
+  --accent:#3cc0cf; --accent-soft:#123a40;
+  --water:#5aa5e3; --veg:#62b56d; --terrain:#d79a5c;
+  --green:#55c07a; --green-soft:#173723; --bad:#f0705f; --bad-soft:#3d1b17; --warn:#e3ac4f; --warn-soft:#3a2b13;
+  --gold:#d8b04f; --silver:#aab3bd; --bronze:#cf8a5c; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.7;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:96px 96px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 40px;position:relative}
+/* contour-line layer */
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--contour);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' viewBox='0 0 480 360'%3E%3Cg fill='none' stroke='black' stroke-width='1.3'%3E%3Cpath d='M120 180c0-55 40-95 95-92 50 3 70 40 64 80-6 45-50 75-95 70-40-4-64-25-64-58z'/%3E%3Cpath d='M88 182c-2-80 58-128 130-124 75 4 104 60 96 115-9 66-74 104-139 97-58-6-86-40-87-88z'/%3E%3Cpath d='M56 186c-4-104 76-160 166-155 98 6 136 80 124 150-12 86-98 134-182 124-72-9-106-54-108-119z'/%3E%3Cpath d='M24 192c-6-128 94-194 202-187 120 8 166 100 152 186-15 104-120 162-224 150C68 329 28 272 24 192z'/%3E%3Cpath d='M390 70c22-12 52-6 62 16 10 24-8 48-34 50-26 2-46-14-44-36 1-12 6-22 16-30z'/%3E%3Cpath d='M372 60c32-24 82-16 98 18 16 36-14 74-54 78-40 3-70-22-66-56 2-16 10-30 22-40z'/%3E%3Cpath d='M400 300c18-14 48-10 58 10 9 20-6 40-30 42-22 2-40-10-40-28 0-10 4-18 12-24z'/%3E%3C/g%3E%3C/svg%3E") 0 0/480px 360px;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' viewBox='0 0 480 360'%3E%3Cg fill='none' stroke='black' stroke-width='1.3'%3E%3Cpath d='M120 180c0-55 40-95 95-92 50 3 70 40 64 80-6 45-50 75-95 70-40-4-64-25-64-58z'/%3E%3Cpath d='M88 182c-2-80 58-128 130-124 75 4 104 60 96 115-9 66-74 104-139 97-58-6-86-40-87-88z'/%3E%3Cpath d='M56 186c-4-104 76-160 166-155 98 6 136 80 124 150-12 86-98 134-182 124-72-9-106-54-108-119z'/%3E%3Cpath d='M24 192c-6-128 94-194 202-187 120 8 166 100 152 186-15 104-120 162-224 150C68 329 28 272 24 192z'/%3E%3Cpath d='M390 70c22-12 52-6 62 16 10 24-8 48-34 50-26 2-46-14-44-36 1-12 6-22 16-30z'/%3E%3Cpath d='M372 60c32-24 82-16 98 18 16 36-14 74-54 78-40 3-70-22-66-56 2-16 10-30 22-40z'/%3E%3Cpath d='M400 300c18-14 48-10 58 10 9 20-6 40-30 42-22 2-40-10-40-28 0-10 4-18 12-24z'/%3E%3C/g%3E%3C/svg%3E") 0 0/480px 360px}
+
+.fort{margin:0 auto;max-width:680px}
+.fort.wide{max-width:1080px}
+/* map sheet with graduated neatline */
+.wall{background:var(--surface);border:1px solid var(--ink);outline:1px solid var(--line);outline-offset:5px;border-radius:2px;
+  box-shadow:0 22px 44px -30px rgba(10,30,40,.55);overflow:hidden;position:relative}
+.gate{background:var(--head);color:var(--on-head);padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.gate .brand{display:flex;align-items:center;gap:12px;min-width:0}
+.gate .layers{flex:none;width:38px;height:38px}
+.gate .brand>div{display:flex;flex-direction:column;min-width:0}
+.gate .subject{font-family:var(--display);font-size:1.25rem;font-weight:600;line-height:1.35}
+.gate .unit{font-size:12px;color:var(--head-muted);letter-spacing:.02em}
+.gate .tools{display:flex;align-items:center;gap:10px}
+.gate .tag{font-family:var(--mono);font-size:12px;color:var(--head-muted);border:1px solid var(--head-muted);border-radius:4px;padding:2px 8px;white-space:nowrap;direction:ltr}
+.gate .north{width:22px;height:30px;flex:none}
+/* graduated ruler under the toolbar */
+.ruler{height:10px;background:
+  repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 10px) bottom/100% 4px no-repeat,
+  repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 50px) bottom/100% 10px no-repeat,
+  var(--raised);border-bottom:1px solid var(--ink)}
+.screen{padding:28px 24px 30px;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.4;font-weight:700}
+h1{font-size:clamp(1.5rem,5vw,2rem)}
+h2{font-size:clamp(1.1rem,3.4vw,1.28rem);font-weight:600}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+.lead{color:var(--muted)}
+.eyebrow{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:2px 10px;font-size:13px;font-weight:600}
+.chip.green{background:var(--green-soft);color:var(--green)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+form{display:flex;flex-direction:column;gap:14px}
+label{font-weight:600;font-size:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+input,select{font:inherit;font-weight:400;color:var(--ink);background:var(--raised);border:1.5px solid var(--line);border-radius:6px;padding:10px 13px;width:100%}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--bad)}
+.err{color:var(--bad);font-size:14px;min-height:1.2em}
+.btn{font:inherit;font-family:var(--display);font-weight:600;font-size:16px;border:0;border-radius:6px;padding:11px 20px;
+  background:var(--accent);color:var(--surface);cursor:pointer;transition:transform .1s,filter .15s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{filter:brightness(1.08)} .btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn.quiet{background:var(--raised);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--bad);color:var(--surface)}
+.btn.sm{font-size:14px;padding:6px 12px;border-radius:5px}
+.btn:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.foot{font-size:12px;color:var(--muted);display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+.scalebar,.foot .crs{font-family:var(--mono)}
+.scalebar{display:inline-flex;flex-direction:column;align-items:stretch;gap:2px;direction:ltr}
+.scalebar i{display:block;width:120px;height:6px;border:1px solid var(--ink);background:linear-gradient(90deg,var(--ink) 0 25%,var(--surface) 25% 50%,var(--ink) 50% 75%,var(--surface) 75%)}
+.scalebar span{display:flex;justify-content:space-between;font-size:10px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:640px){.summary{grid-template-columns:repeat(2,1fr)}}
+.tile{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:var(--raised)}
+.tile span{font-size:13px;color:var(--muted)}
+.tile div{font-family:var(--display);font-size:1.7rem;font-weight:700;line-height:1.3;font-variant-numeric:tabular-nums}
+.tile.top div{color:var(--accent)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.toolbar label{flex:1 1 180px}
+.toolbar .btns{display:flex;gap:8px;flex-wrap:wrap}
+.connect{border:1px dashed var(--line);border-radius:6px;padding:12px 14px;font-size:14px;color:var(--muted);display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center}
+.connect code{font-family:ui-monospace,Consolas,monospace;direction:ltr;color:var(--ink);background:var(--raised);padding:1px 8px;border-radius:6px}
+.live{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:600}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+table{width:100%;border-collapse:collapse;min-width:760px}
+@media (max-width:700px){
+  .tablewrap{overflow:visible;border:0}
+  table{min-width:0} thead{display:none}
+  tbody{display:flex;flex-direction:column;gap:10px}
+  tbody tr{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"rank name del" "rank score score" "grade time when" "dots dots dots";
+    gap:4px 12px;border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--surface);align-items:center}
+  tbody td{padding:0;border:0}
+  td:nth-child(1){grid-area:rank;align-self:start} td:nth-child(2){grid-area:name;min-width:0} td:nth-child(3){grid-area:grade;font-size:13px;color:var(--muted)}
+  td:nth-child(4){grid-area:score} td:nth-child(5){grid-area:time;font-size:13px} td:nth-child(6){grid-area:dots;padding-top:6px}
+  td:nth-child(7){grid-area:when;font-size:13px;text-align:end} td:nth-child(7) small{display:none!important} td:nth-child(8){grid-area:del}
+  td:nth-child(3)::before{content:"الشعبة "} td:nth-child(5)::before{content:"الوقت ";color:var(--muted)}
+  .dots{flex-wrap:wrap} .toolbar .btns{width:100%} .toolbar .btns .btn{flex:1}
+  .screen{padding:20px 16px}
+}
+th,td{padding:10px 12px;text-align:start;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:13px;color:var(--muted);font-weight:600;background:var(--raised);position:sticky;top:0}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.fresh{animation:fresh 2.5s ease-out}
+@keyframes fresh{from{background:var(--green-soft)}to{background:transparent}}
+.rank{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;border:2px solid var(--line);color:var(--muted)}
+.rank.r1{border-color:var(--gold);color:var(--gold);background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.rank.r2{border-color:var(--silver);color:var(--silver);background:color-mix(in srgb,var(--silver) 14%,transparent)}
+.rank.r3{border-color:var(--bronze);color:var(--bronze);background:color-mix(in srgb,var(--bronze) 14%,transparent)}
+.name{font-weight:600}
+.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.scorecell{display:flex;align-items:center;gap:10px;min-width:130px}
+.scorecell b{font-family:var(--display);font-size:1.1rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.meter{flex:1;height:6px;border-radius:6px;background:var(--line);overflow:hidden;min-width:50px}
+.meter i{display:block;height:100%;background:var(--green)}
+.meter.mid i{background:var(--warn)} .meter.low i{background:var(--bad)}
+.dots{display:flex;gap:3px;flex-wrap:nowrap}
+.dots i{width:10px;height:14px;border-radius:3px;background:var(--line)}
+.dots i.ok{background:var(--green)} .dots i.no{background:var(--bad)} .dots i.late{background:var(--warn)}
+.manual{font-size:12px;color:var(--muted)}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+.empty h3{color:var(--ink);margin-bottom:6px}
+.panel{border:1px solid var(--line);border-radius:6px;padding:16px;background:var(--raised)}
+.panel .row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.panel input,.panel select{background:var(--surface)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:12px;border-radius:3px;display:inline-block}
+.confirmbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--bad-soft);color:var(--bad);border-radius:6px;padding:10px 12px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="fort wide">
+    <div class="wall">
+    <header class="gate">
+      <div class="brand"><svg class="layers" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 26 4 18l16-8 16 8z" style="fill:var(--terrain)" transform="translate(0 8)"/><path d="M20 26 4 18l16-8 16 8z" style="fill:var(--veg)" transform="translate(0 2)"/><path d="M20 26 4 18l16-8 16 8z" style="fill:var(--water);stroke:var(--head);stroke-width:1"/></svg><div><span class="unit">الدراسات الاجتماعية · GIS</span><span class="subject">لوحة المعلم · نظم المعلومات الجغرافية</span></div></div>
+      <div class="tools"><span class="tag">TEACHER</span><svg class="north" viewBox="0 0 22 30" aria-label="اتجاه الشمال"><text x="11" y="8" text-anchor="middle" font-size="8" font-family="monospace" style="fill:var(--on-head)">N</text><path d="M11 10 17 28 11 24 5 28z" style="fill:var(--head-muted)"/><path d="M11 10 11 24 5 28z" style="fill:var(--on-head)"/></svg></div>
+    </header>
+    <div class="ruler"></div>
+
+    <section class="screen">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h1>ترتيب الطلاب</h1>
+        <span class="live" id="live">تحديث مباشر</span>
+      </div>
+      <p class="lead">الترتيب حسب الدرجة أولاً، وعند التساوي يتقدم الأسرع في الإجابة.</p>
+
+      <div class="summary">
+        <div class="tile"><span>عدد المحاولات</span><div id="tCount">٠</div></div>
+        <div class="tile"><span>متوسط الدرجة</span><div id="tAvg">-</div></div>
+        <div class="tile top"><span>أعلى درجة</span><div id="tTop">-</div></div>
+        <div class="tile"><span>متوسط الوقت</span><div id="tTime">-</div></div>
+      </div>
+
+      <form class="panel" id="setForm" hidden novalidate>
+        <h3>ربط اللوحة بالنتائج</h3>
+        <p class="lead" style="font-size:14px">الصق رابط Google Apps Script وكلمة سر المعلم اللي كتبتها في ملف Code.gs. تنحفظ على هذا الجهاز فقط.</p>
+        <label for="sUrl">رابط Apps Script<input id="sUrl" dir="ltr" placeholder="https://script.google.com/macros/s/.../exec"></label>
+        <label for="sKey">كلمة سر المعلم<input id="sKey" type="password" dir="ltr"></label>
+        <div class="err" id="sErr" role="alert"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" type="submit">حفظ واتصال</button><button class="btn sm quiet" type="button" id="setCancel">إلغاء</button></div>
+      </form>
+      <div class="connect" id="connect">
+        <span id="connText">النتائج تصل من صفحة الطالب وتُحفظ في Google Sheet.</span>
+        <button class="btn sm quiet" type="button" id="setBtn">الإعدادات</button>
+      </div>
+
+      <div class="toolbar">
+        <label for="search">بحث بالاسم<input id="search" placeholder="اكتب جزءاً من الاسم"></label>
+        <label for="gradeFilter">الشعبة<select id="gradeFilter"><option value="">كل الشعب</option></select></label>
+        <div class="btns">
+          <button class="btn sm" type="button" id="addBtn">إضافة نتيجة</button>
+          <button class="btn sm quiet" type="button" id="exportBtn">تصدير إلى Excel</button>
+          <button class="btn sm ghost" type="button" id="clearBtn">مسح الكل</button>
+        </div>
+      </div>
+
+      <div class="confirmbar" id="clearConfirm" hidden>
+        <span>سيتم حذف كل النتائج نهائياً. متأكد؟</span>
+        <button class="btn sm danger" type="button" id="clearYes">نعم، احذف الكل</button>
+        <button class="btn sm quiet" type="button" id="clearNo">إلغاء</button>
+      </div>
+
+      <form class="panel" id="addForm" hidden novalidate>
+        <h3>إضافة نتيجة يدوياً</h3>
+        <div class="row">
+          <label for="aFirst">الاسم<input id="aFirst"></label>
+          <label for="aFather">اسم الأب<input id="aFather"></label>
+          <label for="aTribe">القبيلة<input id="aTribe"></label>
+        </div>
+        <div class="row">
+          <label for="aGrade">الشعبة
+            <select id="aGrade"><option value="">اختر</option><option value="٨/١">الشعبة ٨/١</option><option value="٨/٢">الشعبة ٨/٢</option><option value="٨/٣">الشعبة ٨/٣</option><option value="٨/٤">الشعبة ٨/٤</option><option value="٨/٥">الشعبة ٨/٥</option><option value="٨/٦">الشعبة ٨/٦</option><option value="٨/٧">الشعبة ٨/٧</option></select>
+          </label>
+          <label for="aScore">الدرجة <span class="manual" id="aScoreHint"></span><input id="aScore" type="number" min="0" inputmode="numeric"></label>
+          <label for="aTime">الوقت بالثواني<input id="aTime" type="number" min="0" inputmode="numeric" placeholder="مثال: 120"></label>
+        </div>
+        <div class="err" id="aErr" role="alert"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn sm" type="submit">حفظ النتيجة</button>
+          <button class="btn sm quiet" type="button" id="addCancel">إلغاء</button>
+        </div>
+      </form>
+
+      <div class="legend">
+        <span><i style="background:var(--green)"></i>صحيحة</span>
+        <span><i style="background:var(--bad)"></i>خاطئة</span>
+        <span><i style="background:var(--warn)"></i>انتهى الوقت</span>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>الترتيب</th><th>الطالب</th><th>الشعبة</th><th>الدرجة</th><th>الوقت</th><th>الإجابات</th><th>التسليم</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="empty" id="empty" hidden>
+          <h3>لا توجد نتائج بعد</h3>
+          <p>افتح برنامج الطالب على أجهزة الطلاب. كل طالب يكمل الاختبار تظهر نتيجته هنا مباشرة.</p>
+        </div>
+      </div>
+      <p class="lead" style="font-size:12px">النتائج محفوظة أيضاً في ورقة Results داخل Google Sheet.</p>
+    </section>
+  </div>
+  <div class="foot"><span class="scalebar"><i></i><span><b>0</b><b>5</b><b>10 km</b></span></span><span class="crs">WGS 84 · UTM 40N</span></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const ar=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+const fmtTime=s=>{s=Math.round(s);return ar(Math.floor(s/60))+":"+ar(String(s%60).padStart(2,"0"))};
+let KEY=[], data=[], seen=new Set(), first=true, total=14, pendingDel=null;
+const cfg={url:"",key:""};
+try{cfg.url=localStorage.getItem("gq_url")||"";cfg.key=localStorage.getItem("gq_key")||""}catch(e){}
+function openSettings(msg){$("sUrl").value=cfg.url;$("sKey").value=cfg.key;$("sErr").textContent=msg||"";$("setForm").hidden=false;$("sUrl").focus()}
+$("setBtn").onclick=()=>openSettings();
+$("setCancel").onclick=()=>{$("setForm").hidden=true};
+$("setForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const u=$("sUrl").value.trim(), k=$("sKey").value;
+  if(!/^https:\/\/script\.google(usercontent)?\.com\//.test(u)){$("sErr").textContent="الرابط لازم يبدأ بـ https://script.google.com/";return}
+  if(!k){$("sErr").textContent="اكتب كلمة سر المعلم.";return}
+  cfg.url=u;cfg.key=k;try{localStorage.setItem("gq_url",u);localStorage.setItem("gq_key",k)}catch(e){}
+  $("setForm").hidden=true; refresh();
+});
+async function api(body){
+  const r=await fetch(cfg.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,key:cfg.key})});
+  const j=await r.json(); if(!j.ok)throw new Error(j.error||"تعذر تنفيذ الطلب"); return j;
+}
+function setLive(ok,t){$("live").textContent=t;$("live").style.color=ok?"":"var(--bad)"}
+
+async function refresh(){
+  if(!cfg.url||!cfg.key){setLive(false,"غير مربوط");if($("setForm").hidden)openSettings();return}
+  try{
+    const j=await (await fetch(cfg.url+"?action=results&key="+encodeURIComponent(cfg.key),{cache:"no-store"})).json();
+    if(!j.ok){setLive(false,"كلمة السر غير صحيحة");if($("setForm").hidden)openSettings(j.error);return}
+    data=j.results||[]; KEY=j.answers||[]; total=j.total||total;
+    $("aScore").max=total; $("aScoreHint").textContent="(من "+ar(total)+")";
+    setLive(true,"تحديث مباشر"); render();
+  }catch(e){setLive(false,"انقطع الاتصال")}
+}
+function render(){
+  const gf=$("gradeFilter"), cur=gf.value;
+  const grades=[...new Set(data.map(d=>d.grade).filter(Boolean))].sort();
+  gf.innerHTML='<option value="">كل الشعب</option>'+grades.map(g=>`<option${g===cur?" selected":""}></option>`).join("");
+  [...gf.options].slice(1).forEach((o,i)=>{o.textContent=grades[i];o.value=grades[i]});
+  gf.value=grades.includes(cur)?cur:"";
+  const q=$("search").value.trim();
+  const list=data.filter(d=>(!gf.value||d.grade===gf.value)&&(!q||(d.first+" "+d.father+" "+d.tribe).includes(q)));
+
+  const n=list.length;
+  $("tCount").textContent=ar(n);
+  $("tAvg").textContent=n?ar((list.reduce((a,d)=>a+d.score,0)/n).toFixed(1))+" / "+ar(total):"-";
+  $("tTop").textContent=n?ar(Math.max(...list.map(d=>d.score)))+" / "+ar(total):"-";
+  $("tTime").textContent=n?fmtTime(list.reduce((a,d)=>a+d.timeSec,0)/n):"-";
+
+  const tb=$("rows"); tb.innerHTML="";
+  $("empty").hidden=n>0; tb.parentElement.hidden=n===0;
+  list.forEach((d,i)=>{
+    const tr=document.createElement("tr");
+    if(!first&&!seen.has(d.id))tr.className="fresh";
+    const pct=d.total?d.score/d.total:0, cls=pct>=.75?"":pct>=.5?"mid":"low";
+    const when=new Date(d.at);
+    let dots="";
+    if(d.answers&&KEY.length){dots='<div class="dots">'+d.answers.map((a,k)=>{const c=a===-1?"late":a===KEY[k]?"ok":"no";return `<i class="${c}" title="${ar(k+1)}"></i>`}).join("")+"</div>"}
+    else dots='<span class="manual">إدخال يدوي</span>';
+    tr.innerHTML=`<td><div class="rank ${i<3?"r"+(i+1):""}">${ar(i+1)}</div></td>
+      <td class="name"></td><td class="g"></td>
+      <td><div class="scorecell"><b>${ar(d.score)} / ${ar(d.total)}</b><div class="meter ${cls}"><i style="width:${pct*100}%"></i></div></div></td>
+      <td class="num">${fmtTime(d.timeSec)}</td><td>${dots}</td>
+      <td class="num">${ar(when.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}))}<small class="manual" style="display:block">${ar(when.toLocaleDateString("en-GB"))}</small></td>
+      <td><button class="btn sm quiet del" type="button">${pendingDel===d.id?"تأكيد الحذف":"حذف"}</button></td>`;
+    const nm=tr.querySelector(".name"); nm.textContent=d.first+" "+d.father+" "+d.tribe;
+    tr.querySelector(".g").textContent=d.grade||"-";
+    const del=tr.querySelector(".del");
+    if(pendingDel===d.id)del.classList.replace("quiet","danger");
+    del.onclick=async()=>{
+      if(pendingDel!==d.id){pendingDel=d.id;render();setTimeout(()=>{if(pendingDel===d.id){pendingDel=null;render()}},4000);return}
+      pendingDel=null;
+      try{await api({action:"delete",id:d.id})}catch(e){setLive(false,e.message)}
+      refresh();
+    };
+    tb.appendChild(tr);
+  });
+  data.forEach(d=>seen.add(d.id)); first=false;
+}
+$("search").oninput=render; $("gradeFilter").onchange=render;
+refresh(); setInterval(refresh,8000);
+
+$("addBtn").onclick=()=>{$("addForm").hidden=!$("addForm").hidden;if(!$("addForm").hidden)$("aFirst").focus()};
+$("addCancel").onclick=()=>{$("addForm").hidden=true;$("aErr").textContent=""};
+$("addForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const v={first:$("aFirst").value.trim(),father:$("aFather").value.trim(),tribe:$("aTribe").value.trim(),grade:$("aGrade").value,
+    score:Number($("aScore").value),timeSec:Number($("aTime").value||0)};
+  if(!v.first||!v.father||!v.tribe){$("aErr").textContent="اكتب الاسم واسم الأب والقبيلة.";return}
+  if($("aScore").value===""||!Number.isInteger(v.score)||v.score<0||v.score>total){$("aErr").textContent="الدرجة رقم صحيح بين ٠ و "+ar(total)+".";return}
+  try{await api({action:"add",...v})}catch(err){$("aErr").textContent=err.message;return}
+  $("aErr").textContent=""; e.target.reset(); $("addForm").hidden=true; refresh();
+});
+$("clearBtn").onclick=()=>{$("clearConfirm").hidden=false};
+$("clearNo").onclick=()=>{$("clearConfirm").hidden=true};
+$("clearYes").onclick=async()=>{try{await api({action:"clear"})}catch(e){setLive(false,e.message)}$("clearConfirm").hidden=true;refresh()};
+$("exportBtn").onclick=()=>{
+  const esc=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const rows=[["الترتيب","الاسم","اسم الأب","القبيلة","الشعبة","الدرجة","من","الوقت (ثانية)","التاريخ","إدخال يدوي"]];
+  data.forEach((d,i)=>rows.push([i+1,d.first,d.father,d.tribe,d.grade,d.score,d.total,d.timeSec,new Date(d.at).toLocaleString("en-GB"),d.manual?"نعم":""]));
+  const blob=new Blob(["\ufeff"+rows.map(r=>r.map(esc).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="gis-quiz-results.csv";document.body.appendChild(a);a.click();a.remove();
+};
+</script>
+</body>
+</html>
